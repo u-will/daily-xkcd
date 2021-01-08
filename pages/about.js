@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Layout from '../components/layout'
 // there are two way write this type of function:
 
 // export default() => (
@@ -12,14 +12,13 @@ import Link from 'next/link';
 
 function About() {
   return (
-    <div>
-      <h1>About</h1>
-      <p>
-        <Link href="/">
-          <a>Home</a>
-        </Link>
-      </p>
-    </div>
+
+    <Layout>
+      <div>
+        <h1>About Page </h1>
+      </div>
+    </Layout>
+
   )
 }
 

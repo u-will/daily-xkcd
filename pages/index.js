@@ -1,43 +1,61 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-
+import Layout from '../components/layout'
+import axios from 'axios'
+import Link from 'next/link'
 export default function Home(props) {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>XKCD</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <Layout>
+      <div className={styles.container}>
+        <Head>
+          <title>Daily XKCD</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          XKCD
+        <main className={styles.main}>
+          <h1 className={styles.title}>
+            Daily XKCD
         </h1>
-        <XkcdCount count = {props.count} />
-        <XkcdList />
-        <Footer message='this is my story' />
-      </main>
-    </div>
+          <h2>{props.comic.safe_title}</h2>
+          <img src={props.comic.img} alt={props.comic.alt} />
+          <XkcdCount count={props.count} />
+          <Footer comicNum={props.comic.num} />
+        </main>
+      </div>
+    </Layout>
   )
 }
 
 export async function getStaticProps() {
 
+  const response = axios.get("https://xkcd.com/info.0.json")
   // why are we using the {} instead of () on the return??
   return {
     props: {
-      count: 34,
+      comic: (await response).data
     }
   }
 }
 
 function XkcdCount(props) {
-  return <h2> Count: {props.count} </h2>
+  return <h2> previous: 10 </h2>
 }
 
-function XkcdList() {
-  return <h2> List </h2>
-}
 function Footer(props) {
-  return <small> {props.message}</small>
+  let nums = [];
+  for (let num = props.comicNum; num > props.comicNum - 10; num--) {
+    nums.push(num);
+  }
+  return (
+    <>
+      <ul>
+        {nums.map(num =>(
+            <li>
+              <Link href="/num/[id].js" as={`/num/${num}`}><a>#{num}</a></Link>
+            </li>
+        ))}
+      </ul>
+    </>
+
+  )
 }
